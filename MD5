@@ -1,8 +1,8 @@
-b118258f40c6e572f311d9b9420afbb3 *DESCRIPTION
+00c659d0382d5179b3959ee50e69ec5d *DESCRIPTION
 dd8bae67f8d49a603e82da45378a3b04 *NAMESPACE
 6cefaad2fc468e8c978c4f8c217987f3 *R/RcppExports.R
-e84fb0b6c765917c013fbf012c071188 *R/fabMix.R
-71ec3d54f2cf9dbe2e35af192268e393 *build/partial.rdb
+fefed4bb2a50ba56b006627f3ba40627 *R/fabMix.R
+ffd43e1fec00e9770da9506670c9118c *build/partial.rdb
 b5c9e190ebc7e37eb8fdf4d81ba389de *data/waveDataset1500.RData
 07e81241aa825e7e99b52edf5bacf108 *inst/CITATION
 6ee08ebe1cced234c0ca51d5b378326c *man/CorMat_mcmc_summary.Rd
@@ -21,8 +21,8 @@ e1ef2be0423f5219df961b86b4a2bea1 *man/compute_sufficient_statistics.Rd
 57fcbb85b1c32bee8ff108a4fbb4e67e *man/compute_sufficient_statistics_given_mu.Rd
 cb3d96e27c42e029f90cc96e2a31a611 *man/compute_sufficient_statistics_q0.Rd
 b40e142587f2576be4b60075ac022f5d *man/dealWithLabelSwitching.Rd
-77e4d3467dbee045d654fee95c37bc86 *man/fabMix-package.Rd
-904ed8f31463f4a70cb452a1d7c79e0a *man/fabMix.Rd
+48c6d983014d43aa84b60af39a803c56 *man/fabMix-package.Rd
+9d2285713d29a176eff19944bbd00950 *man/fabMix.Rd
 b99b9a8967567f2150e6aea8ee8a7042 *man/fabMix_CxC.Rd
 1a6bcace7161cb1c729a76eb363070df *man/fabMix_CxU.Rd
 cb25cea463843693ca3f18bffe555503 *man/fabMix_UxC.Rd

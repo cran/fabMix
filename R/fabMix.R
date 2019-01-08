@@ -5390,7 +5390,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 	cat("        / __/___ _/ /_  /  |/  (_)  __", "\n")
 	cat("       / /_/ __ `/ __ \\/ /|_/ / / |/_/", "\n")
 	cat("      / __/ /_/ / /_/ / /  / / />  <  ", "\n")
-	cat("     /_/  \\__,_/_.___/_/  /_/_/_/|_|  version 4.4", "\n\n")
+	cat("     /_/  \\__,_/_.___/_/  /_/_/_/|_|  version 4.5", "\n\n")
 
 	model = intersect(model, c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "CCC"))
 	if(missing(Kmax)){Kmax <- 20}
@@ -6634,36 +6634,41 @@ plot.fabMix.object <- function(x, what, variableSubset, class_mfrow = NULL, sig_
 		if((v == 5)||(what == "factor_loadings")){
 			on.exit(par())
 			# 4. Factor loadings per cluster
-			par(mfrow = c(1,1))
-			firstLetter <- strsplit(as.character(x$selected_model$parameterization), split = "")[[1]][1]
-			q <- as.numeric(x$selected_model['num_Factors'])
-			k = 0
-			while((k < K)){
-				k = k + 1
-				Factor = as.factor(rep(paste0('Factor ', 1:q), each = p))
-				Variable = as.factor(rep(1:p, q))
-				lambda = as.numeric(x$mcmc$lambda_map[k,])
-				df <- data.frame( Factor, Variable, lambda)
-				if(firstLetter == "C"){
-					myTitle <- "Factor loadings (MAP)"
-					mySubTitle <- "Common for all clusters"
-				}else{
-					myTitle <- "Factor loadings (MAP)"
-					mySubTitle <- paste0("Cluster ", k)
-				}
-				p1 <- ggplot(df, aes(x=as.factor(Factor), y=lambda, fill=Variable)) +
-				  geom_bar(position=position_dodge(), stat="identity", colour='black') +
-				  coord_flip() +
-				  labs(y = "loading", x = "factor") + 
-				  labs(title = myTitle, subtitle = mySubTitle)
-				print(p1)
-				if( (k < K) & ((firstLetter == "U")) ){
-					readline(prompt=paste0("Press ENTER to see next plot... (",k + 1,"/",K,")"))
-				}else{
-					k = K
-				}
-			}
-
+		 	K <- x$selected_model$num_Clusters
+			aliveClusters <-  as.numeric(names(table(x$class)))
+		        par(mfrow = c(1, 1))
+		        firstLetter <- strsplit(as.character(x$selected_model$parameterization), split = "")[[1]][1]
+		        q <- as.numeric(x$selected_model["num_Factors"])
+		        k = 0
+		        while ((k < K)) {
+		          k = k + 1
+		          Factor = as.factor(rep(paste0("Factor ", 1:q), 
+		            each = p))
+		          Variable = as.factor(rep(1:p, q))
+		          lambda = as.numeric(x$mcmc$lambda_map[aliveClusters[k], ])
+		          df <- data.frame(Factor, Variable, lambda)
+		          if (firstLetter == "C") {
+		            myTitle <- "Factor loadings (MAP)"
+		            mySubTitle <- "Common for all clusters"
+		          }
+		          else {
+		            myTitle <- "Factor loadings (MAP)"
+		            mySubTitle <- paste0("Cluster `", aliveClusters[k],"'")
+		          }
+		          p1 <- ggplot(df, aes(x = as.factor(Factor), 
+		            y = lambda, fill = Variable)) + geom_bar(position = position_dodge(), 
+		            stat = "identity", colour = "black") + coord_flip() + 
+		            labs(y = "loading", x = "factor") + labs(title = myTitle, 
+		            subtitle = mySubTitle)
+			     print(p1)
+		          if ((k < K) & ((firstLetter == "U"))) {
+		            readline(prompt = paste0("Press ENTER to see next plot... (", 
+		              k + 1, "/", K, ")"))
+		          }
+		          else {
+		            k = K
+		          }
+		        }
 		}
 		par(mfrow=c(1,1))
 

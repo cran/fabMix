@@ -2,8 +2,8 @@ Package: fabMix
 Type: Package
 Title: Overfitting Bayesian Mixtures of Factor Analyzers with
         Parsimonious Covariance and Unknown Number of Components
-Version: 4.4
-Date: 2018-11-28
+Version: 4.5
+Date: 2019-01-08
 Authors@R: 
     c(person(given = "Panagiotis",
 	     family = "Papastamoulis",
@@ -18,8 +18,8 @@ Imports: Rcpp (>= 0.12.17), MASS, doParallel, foreach, label.switching,
         mvtnorm, doRNG, RColorBrewer, corrplot, mclust, coda, ggplot2
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
-Packaged: 2018-11-28 18:23:06 UTC; panagiotis
+Packaged: 2019-01-08 06:44:00 UTC; panagiotis
 Author: Panagiotis Papastamoulis [aut, cre]
     (<https://orcid.org/0000-0001-9468-7613>)
 Repository: CRAN
-Date/Publication: 2018-11-28 20:30:03 UTC
+Date/Publication: 2019-01-08 07:10:02 UTC
