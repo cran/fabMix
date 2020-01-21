@@ -3019,7 +3019,7 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 	#get rid of other packages messages after printing logo
 	nothingHere <- 0
-	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 		nothingHere + 1
 	}
 	mypal <- c(brewer.pal(9, "Set1"), "black") # up to 10 colours
@@ -3080,13 +3080,13 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		if(q == 0){d_per_cluster = 10*p}
 		initialAlphas <- seq(d_per_cluster/2, d_per_cluster, length = nChains)
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
@@ -3097,13 +3097,13 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		d_per_cluster = 2*p + p*q + q*(q-1)/2
 		initialAlphas <- dirPriorAlphas
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
@@ -3113,13 +3113,13 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	cat(paste(' OK'),'\n')
 	cat(paste('-    (2) Initializing the actual model from the previously obtained values... '))
 	if(sameSigma == TRUE){
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
 		}
 	}else{
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
@@ -3162,14 +3162,14 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	bb <- nIterPerCycle - 1
 	for( iteration in 2:mCycles ){
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
@@ -3298,7 +3298,7 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 	#get rid of other packages messages after printing logo
 	nothingHere <- 0
-	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 		nothingHere + 1
 	}
 	mypal <- c(brewer.pal(9, "Set1"), "black") # up to 10 colours
@@ -3359,13 +3359,13 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		if(q == 0){d_per_cluster = 10*p}
 		initialAlphas <- seq(d_per_cluster/2, d_per_cluster, length = nChains)
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
@@ -3376,13 +3376,13 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		d_per_cluster = 2*p + p*q + q*(q-1)/2
 		initialAlphas <- dirPriorAlphas
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
@@ -3392,13 +3392,13 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	cat(paste(' OK'),'\n')
 	cat(paste('-    (2) Initializing the actual model from the previously obtained values... '))
 	if(sameSigma == TRUE){
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
 		}
 	}else{
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
@@ -3443,14 +3443,14 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	bb <- nIterPerCycle - 1
 	for( iteration in 2:mCycles ){
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
@@ -3578,7 +3578,7 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 	#get rid of other packages messages after printing logo
 	nothingHere <- 0
-	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 		nothingHere + 1
 	}
 	mypal <- c(brewer.pal(9, "Set1"), "black") # up to 10 colours
@@ -3640,13 +3640,13 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			if(q == 0){d_per_cluster = 10*p}
 			initialAlphas <- seq(d_per_cluster/2, d_per_cluster, length = nChains)
 			if(sameSigma == TRUE){
-				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
 				}
 			}else{
-				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
@@ -3657,13 +3657,13 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			d_per_cluster = 2*p + p*q + q*(q-1)/2
 			initialAlphas <- dirPriorAlphas
 			if(sameSigma == TRUE){
-				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
 				}
 			}else{
-				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
@@ -3673,13 +3673,13 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		cat(paste(' OK'),'\n')
 		cat(paste('-    (2) Initializing the actual model from the previously obtained values... '))
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
@@ -3692,12 +3692,12 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		d_per_cluster = 2*p + p*q + q*(q-1)/2
 		if(q == 0){d_per_cluster = 10*p}
 		initialAlphas <- seq(d_per_cluster/2, d_per_cluster, length = nChains)
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
 		}
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
@@ -3711,13 +3711,13 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		cat(paste(' OK'),'\n')
 		#cat(paste('-    (2) Initializing the actual model from the previously obtained values... '))
 		#if(sameSigma == TRUE){
-		#	foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		#	foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 		#		overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 		#			Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 		#			alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
 		#	}
 		#}else{
-		#	foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		#	foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 		#		overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 		#			Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 		#			alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
@@ -3763,14 +3763,14 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	bb <- nIterPerCycle - 1
 	for( iteration in 2:mCycles ){
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
@@ -3898,7 +3898,7 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 	#get rid of other packages messages after printing logo
 	nothingHere <- 0
-	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+	foreach(nothingHere=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 		nothingHere + 1
 	}
 	mypal <- c(brewer.pal(9, "Set1"), "black") # up to 10 colours
@@ -3956,13 +3956,13 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		if(q == 0){d_per_cluster = 10*p}
 		initialAlphas <- seq(d_per_cluster/2, d_per_cluster, length = nChains)
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
@@ -3973,13 +3973,13 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		d_per_cluster = 2*p + p*q + q*(q-1)/2
 		initialAlphas <- dirPriorAlphas
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
@@ -3989,13 +3989,13 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	cat(paste(' OK'),'\n')
 	cat(paste('-    (2) Initializing the actual model from the previously obtained values... '))
 	if(sameSigma == TRUE){
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
 		}
 	}else{
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
@@ -4038,14 +4038,14 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	bb <- nIterPerCycle - 1
 	for( iteration in 2:mCycles ){
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
@@ -4228,13 +4228,13 @@ fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, out
 	d_per_cluster = 2*p + p*q + q*(q-1)/2
 	initialAlphas <- seq(d_per_cluster/2, d_per_cluster, length = nChains)
 	if(sameSigma == TRUE){
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = 100, thinning = 1, burn = 99, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
 		}
 	}else{
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_Sj_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = 100, thinning = 1, burn = 99, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
@@ -4243,13 +4243,13 @@ fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, out
 	cat(paste(' OK'),'\n')
 	cat(paste('-    (2) Initializing the actual model from the previously obtained values... '))
 	if(sameSigma == TRUE){
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
 		}
 	}else{
-		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_Sj_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
@@ -4290,14 +4290,14 @@ fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, out
 	xMean <- array(data = 0, dim = c(n, p))
 	for( iteration in 2:mCycles ){
 		if(sameSigma == TRUE){
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
-			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dorng% {
+			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
 					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
@@ -4855,6 +4855,7 @@ dealWithLabelSwitching <- function(sameSigma = TRUE, x_data, outputFolder, q, bu
 		cllValues <- cllValues[-(1:burn), ]
 		z <- z[-(1:burn),]
 	}
+
 	K <- as.numeric(names(sort(table(logl[,1]),decreasing=TRUE)[1]))
 	kSelected <- K
 	cat(paste0('         * Posterior mode corresponds to K = ', K),'\n')
@@ -5390,7 +5391,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 	cat("        / __/___ _/ /_  /  |/  (_)  __", "\n")
 	cat("       / /_/ __ `/ __ \\/ /|_/ / / |/_/", "\n")
 	cat("      / __/ /_/ / /_/ / /  / / />  <  ", "\n")
-	cat("     /_/  \\__,_/_.___/_/  /_/_/_/|_|  version 4.5", "\n\n")
+	cat("     /_/  \\__,_/_.___/_/  /_/_/_/|_|  version 4.6", "\n\n")
 
 	model = intersect(model, c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "CCC"))
 	if(missing(Kmax)){Kmax <- 20}
@@ -5934,7 +5935,7 @@ fabMix_parallelModels <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "
 	}
 	i <-0
 	gwd <- getwd()	# for windows compatibility (otherwise, the foreach loops changes the working directory)
-	myList <- foreach(i=1:parallelModels, .export=ls(globalenv())) %dorng% {
+	myList <- foreach(i=1:parallelModels, .export=ls(globalenv())) %dopar% {
 		setwd(gwd)
 		sink(paste0("print_parallelRun_",i,".txt"))
 		myDir <- paste0('parallelRun_',i)

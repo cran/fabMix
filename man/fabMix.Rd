@@ -141,6 +141,8 @@ Martyn Plummer, Nicky Best, Kate Cowles and Karen Vines (2006). CODA: Convergenc
 McNicholas, P.D. and Murphy, T.B. Stat Comput (2008) 18: 285. https://doi.org/10.1007/s11222-008-9056-0.
 
 Papastamoulis, P. (2018). Overfitting Bayesian mixtures of factor analyzers with an unknown number of components. Computational Statistics and Data Analysis, 124: 220-234. DOI: 10.1016/j.csda.2018.03.007.
+
+Papastamoulis, P (2019).  Clustering multivariate data using factor analytic Bayesian mixtures with an unknown number of components. Statistics and Computing, doi: 10.1007/s11222-019-09891-z.
 }
 \author{
 Panagiotis Papastamoulis
@@ -172,7 +174,7 @@ colnames(syntheticDataset$data) <- paste0("x_",1:p)
 
 qRange <- 2	# values for the number of factors (only the true number 
 #                                                    is considered here)
-Kmax <- 4	# number of components for the overfitted mixture model
+Kmax <- 2	# number of components for the overfitted mixture model
 nChains <- 2	# number of parallel heated chains
 
 set.seed(1)

@@ -1,10 +1,10 @@
-00c659d0382d5179b3959ee50e69ec5d *DESCRIPTION
-dd8bae67f8d49a603e82da45378a3b04 *NAMESPACE
+188bfa6d5b18561e3203057cf5927241 *DESCRIPTION
+070f1fe007432583380e8a9bb9ac537f *NAMESPACE
 6cefaad2fc468e8c978c4f8c217987f3 *R/RcppExports.R
-fefed4bb2a50ba56b006627f3ba40627 *R/fabMix.R
-ffd43e1fec00e9770da9506670c9118c *build/partial.rdb
+163108738f1c8908bfe0f304d88ea7ec *R/fabMix.R
+8518591b98123bd947ec408312dec8ff *build/partial.rdb
 b5c9e190ebc7e37eb8fdf4d81ba389de *data/waveDataset1500.RData
-07e81241aa825e7e99b52edf5bacf108 *inst/CITATION
+a26f9e404b5609c19088220f99b46f52 *inst/CITATION
 6ee08ebe1cced234c0ca51d5b378326c *man/CorMat_mcmc_summary.Rd
 85e8d57ddf21814d9126ee51bcf83acc *man/CovMat_mcmc_summary.Rd
 370d426981a3905d3a5896e25753ea41 *man/complete.log.likelihood.Rd
@@ -21,8 +21,8 @@ e1ef2be0423f5219df961b86b4a2bea1 *man/compute_sufficient_statistics.Rd
 57fcbb85b1c32bee8ff108a4fbb4e67e *man/compute_sufficient_statistics_given_mu.Rd
 cb3d96e27c42e029f90cc96e2a31a611 *man/compute_sufficient_statistics_q0.Rd
 b40e142587f2576be4b60075ac022f5d *man/dealWithLabelSwitching.Rd
-48c6d983014d43aa84b60af39a803c56 *man/fabMix-package.Rd
-9d2285713d29a176eff19944bbd00950 *man/fabMix.Rd
+d92ef1c4af7176e190abdf7536422b5b *man/fabMix-package.Rd
+8e24896e9dbcf7c66f841d6a4b9d5e9a *man/fabMix.Rd
 b99b9a8967567f2150e6aea8ee8a7042 *man/fabMix_CxC.Rd
 1a6bcace7161cb1c729a76eb363070df *man/fabMix_CxU.Rd
 cb25cea463843693ca3f18bffe555503 *man/fabMix_UxC.Rd
@@ -72,7 +72,7 @@ da1f10afb28a8e8416926a5c0bc18773 *man/update_z2.Rd
 9d59d130dc9173cc1a60545052ca2112 *man/update_z_b_Sj.Rd
 c478cb9b08a78a1bfcce72bb175eb3ba *man/update_z_q0.Rd
 657c9267e3c40e895148422949532cad *man/update_z_q0_sameSigma.Rd
-1e78c6278b61c791524de1767416ef2e *man/waveDataset1500.Rd
+9dc4d20b562b524afb32d646eab584c3 *man/waveDataset1500.Rd
 61059660eb073d93e00e8ee054237071 *src/Makevars
 61059660eb073d93e00e8ee054237071 *src/Makevars.win
 beab39ef57521e49c6d2c0a109caf226 *src/RcppExports.cpp

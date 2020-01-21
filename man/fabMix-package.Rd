@@ -28,6 +28,8 @@ van Havre, Z., White, N., Rousseau, J. and Mengersen, K. (2015). Overfitting Bay
 Papastamoulis, P. (2016). \code{label.switching}: An R Package for Dealing with the Label Switching Problem in MCMC Outputs. Journal of Statistical Software, 69(1), 1-24.
 
 Papastamoulis, P. (2018). Overfitting Bayesian mixtures of factor analyzers with an unknown number of components. Computational Statistics and Data Analysis, 124: 220-234. DOI: 10.1016/j.csda.2018.03.007.
+
+Papastamoulis, P (2019).  Clustering multivariate data using factor analytic Bayesian mixtures with an unknown number of components. Statistics and Computing, doi: 10.1007/s11222-019-09891-z.
 }
 \keyword{ package }
 \seealso{
@@ -60,7 +62,7 @@ colnames(syntheticDataset$data) <- paste0("x_",1:p)
 
 qRange <- 2	# values for the number of factors (only the true number 
 #                                                    is considered here)
-Kmax <- 4	# number of components for the overfitted mixture model
+Kmax <- 2	# number of components for the overfitted mixture model
 nChains <- 2	# number of parallel heated chains
 
 set.seed(1)
