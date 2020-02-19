@@ -9,7 +9,7 @@
 \usage{
 overfittingMFA_missing_values(missing_entries, x_data, originalX, outputDirectory, Kmax, 
 	m, thinning, burn, g, h, alpha_prior, alpha_sigma, 
-	beta_sigma, start_values, q, zStart, gibbs_z)
+	beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular)
 }
 \arguments{
   \item{missing_entries}{
@@ -62,6 +62,9 @@ overfittingMFA_missing_values(missing_entries, x_data, originalX, outputDirector
 }
   \item{gibbs_z}{
 	Optional
+}
+  \item{lowerTriangular}{
+	logical value indicating whether a lower triangular parameterization should be imposed on the matrix of factor loadings (if TRUE) or not. Default: TRUE.
 }
 }
 \value{

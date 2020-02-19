@@ -700,7 +700,7 @@ update_SigmaINV_faster_q0_sameSigma <- function(z, mu, K, alpha_sigma, beta_sigm
 
 
 
-overfitting_q0 <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q = 0, zStart, gibbs_z){
+overfitting_q0 <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q = 0, zStart, gibbs_z, lowerTriangular=TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -709,11 +709,12 @@ overfitting_q0 <- function(x_data, originalX, outputDirectory, Kmax, m, thinning
 	ledermannBound <- 0
 	if (q > 0){ stop(paste0('q should be equal to ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
-
 	if(missing(Kmax)){Kmax <- 20}
 	if(missing(m)){m <- 21000}
 	if(missing(burn)){burn <- 1000}
@@ -842,7 +843,7 @@ overfitting_q0 <- function(x_data, originalX, outputDirectory, Kmax, m, thinning
 
 
 
-overfitting_q0_sameSigma <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q = 0, zStart, gibbs_z){
+overfitting_q0_sameSigma <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q = 0, zStart, gibbs_z, lowerTriangular=TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -851,9 +852,11 @@ overfitting_q0_sameSigma <- function(x_data, originalX, outputDirectory, Kmax, m
 	ledermannBound <- 0
 	if (q > 0){ stop(paste0('q should be equal to ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -985,7 +988,7 @@ overfitting_q0_sameSigma <- function(x_data, originalX, outputDirectory, Kmax, m
 ################################################################################################################
 ################################################################################################################
 
-overfittingMFA <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular = TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -995,9 +998,11 @@ overfittingMFA <- function(x_data, originalX, outputDirectory, Kmax, m, thinning
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -1017,7 +1022,7 @@ overfittingMFA <- function(x_data, originalX, outputDirectory, Kmax, m, thinning
 			m = m, thinning = thinning, burn = burn, g = g, 
 			h = h, alpha_prior = alpha_prior, alpha_sigma = alpha_sigma, 
 			beta_sigma = beta_sigma, start_values = start_values, 
-			q = 0, zStart = zStart, gibbs_z = gibbs_z)
+			q = 0, zStart = zStart, gibbs_z = gibbs_z, lowerTriangular = lowerTriangular)
 		return(doNothing <- 0) # exit
 	}
 	if( start_values == F ){
@@ -1182,7 +1187,7 @@ overfittingMFA <- function(x_data, originalX, outputDirectory, Kmax, m, thinning
 
 
 
-overfittingMFA_Sj <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_Sj <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular=TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -1192,9 +1197,11 @@ overfittingMFA_Sj <- function(x_data, originalX, outputDirectory, Kmax, m, thinn
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -1214,7 +1221,7 @@ overfittingMFA_Sj <- function(x_data, originalX, outputDirectory, Kmax, m, thinn
 			m = m, thinning = thinning, burn = burn, g = g, 
 			h = h, alpha_prior = alpha_prior, alpha_sigma = alpha_sigma, 
 			beta_sigma = beta_sigma, start_values = start_values, 
-			q = 0, zStart = zStart, gibbs_z = gibbs_z)
+			q = 0, zStart = zStart, gibbs_z = gibbs_z, lowerTriangular = lowerTriangular)
 		return(doNothing <- 0) # exit
 	}
 	if( start_values == F ){
@@ -1380,7 +1387,7 @@ overfittingMFA_Sj <- function(x_data, originalX, outputDirectory, Kmax, m, thinn
 
 
 #new in version 3 (kapote na ftiakseis ta lambda, edw den xreiazontai ola ta connections.)
-overfittingMFA_CCU <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_CCU <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular = TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -1390,9 +1397,11 @@ overfittingMFA_CCU <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -1580,7 +1589,7 @@ overfittingMFA_CCU <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 
 
 # new in version 3
-overfittingMFA_CUU <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_CUU <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular = TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -1590,9 +1599,11 @@ overfittingMFA_CUU <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -1783,7 +1794,7 @@ overfittingMFA_CUU <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 
 
 #new in version 3 
-overfittingMFA_CCC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_CCC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular=TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -1793,9 +1804,11 @@ overfittingMFA_CCC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -1982,7 +1995,7 @@ overfittingMFA_CCC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 
 
 # new in version 3
-overfittingMFA_CUC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_CUC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular = TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -1992,9 +2005,11 @@ overfittingMFA_CUC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -2185,7 +2200,7 @@ overfittingMFA_CUC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 
 
 #new in version 3
-overfittingMFA_UCC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_UCC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular=TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -2195,9 +2210,11 @@ overfittingMFA_UCC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -2381,7 +2398,7 @@ overfittingMFA_UCC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 
 
 #new in version 3
-overfittingMFA_UUC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_UUC <- function(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular=TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -2391,9 +2408,11 @@ overfittingMFA_UUC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -2586,7 +2605,7 @@ overfittingMFA_UUC <- function(x_data, originalX, outputDirectory, Kmax, m, thin
 
 
 
-overfittingMFA_missing_values <- function(missing_entries, x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_missing_values <- function(missing_entries, x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular=TRUE){
 	# missing_entries: list which contains the row number (1st entry) and column indexes (subsequent entries) for every row containing missing values
 
 	if(missing(originalX)){originalX <- x_data}
@@ -2598,9 +2617,11 @@ overfittingMFA_missing_values <- function(missing_entries, x_data, originalX, ou
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -2784,7 +2805,7 @@ overfittingMFA_missing_values <- function(missing_entries, x_data, originalX, ou
 
 
 
-overfittingMFA_Sj_missing_values <- function(missing_entries, x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z){
+overfittingMFA_Sj_missing_values <- function(missing_entries, x_data, originalX, outputDirectory, Kmax, m, thinning, burn, g, h, alpha_prior, alpha_sigma, beta_sigma, start_values, q, zStart, gibbs_z, lowerTriangular=TRUE){
 	if(missing(originalX)){originalX <- x_data}
 	if(missing(gibbs_z)){gibbs_z = 0.05}
 	if(missing(zStart)){zStart = FALSE}
@@ -2794,9 +2815,11 @@ overfittingMFA_Sj_missing_values <- function(missing_entries, x_data, originalX,
 	ledermannBound <- ( 2*p + 1 - sqrt(8*p + 1) ) / 2
 	if (q > ledermannBound){ stop(paste0('q should not exceed the Ledermann bound: ', ledermannBound)) }
 	n <- dim(x_data)[1]
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	if(missing(Kmax)){Kmax <- 20}
@@ -2996,7 +3019,7 @@ log_dirichlet_pdf <- function(alpha, weights){
 
 
 # for UUU and UCU models
-fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05){
+fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05, lowerTriangular=TRUE){
 
 	missingRowsIndex <- which(is.na(rowSums(rawData)) == TRUE)
 	nMissingRows <- length( missingRowsIndex ) 
@@ -3065,9 +3088,11 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	kValues <- array(data = NA, dim = c(mCycles, nChains))
 	mh_acceptance_rate <- 0
 	dir.create('tmpDir')
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	kpq <- Kmax*p*q
@@ -3083,13 +3108,13 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}
 	}else{
@@ -3100,13 +3125,13 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}
 	}
@@ -3116,13 +3141,13 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 		}
 	}else{
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 		}
 	}
 	cat(paste(' OK'),'\n')
@@ -3165,14 +3190,14 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}
@@ -3275,7 +3300,7 @@ fabMix_UxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 # new in version 3
 # CUU and CCU models (sameSigma = TRUE => CCU, sameSigma = FALSE => CUU)
-fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05){
+fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05, lowerTriangular=TRUE){
 
 	missingRowsIndex <- which(is.na(rowSums(rawData)) == TRUE)
 	nMissingRows <- length( missingRowsIndex ) 
@@ -3344,9 +3369,11 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	kValues <- array(data = NA, dim = c(mCycles, nChains))
 	mh_acceptance_rate <- 0
 	dir.create('tmpDir')
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	kpq <- Kmax*p*q
@@ -3362,13 +3389,13 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}
 	}else{
@@ -3379,13 +3406,13 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}
 	}
@@ -3395,13 +3422,13 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 		}
 	}else{
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular)
 		}
 	}
 	cat(paste(' OK'),'\n')
@@ -3446,14 +3473,14 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUU(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}
@@ -3555,7 +3582,7 @@ fabMix_CxU <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 # new in version 3
 # CUC and CCC models (sameSigma = TRUE => CCC, sameSigma = FALSE => CUC)
-fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05, cccStart = FALSE){
+fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05, cccStart = FALSE, lowerTriangular=TRUE){
 
 	missingRowsIndex <- which(is.na(rowSums(rawData)) == TRUE)
 	nMissingRows <- length( missingRowsIndex ) 
@@ -3624,9 +3651,11 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	kValues <- array(data = NA, dim = c(mCycles, nChains))
 	mh_acceptance_rate <- 0
 	dir.create('tmpDir')
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	kpq <- Kmax*p*q
@@ -3643,13 +3672,13 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
+						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart, lowerTriangular=lowerTriangular)
 				}
 			}else{
 				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
+						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart, lowerTriangular=lowerTriangular)
 				}
 			}
 		}else{
@@ -3660,13 +3689,13 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
+						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart, lowerTriangular=lowerTriangular)
 				}
 			}else{
 				foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 					overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 						Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
+						alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart, lowerTriangular=lowerTriangular)
 				}
 			}
 		}
@@ -3676,13 +3705,13 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 			}
 		}
 	}else{
@@ -3695,12 +3724,12 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, zStart = zStart, lowerTriangular=lowerTriangular)
 		}
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 			if(sameSigma == FALSE){
 				tmp <- read.table(paste0(outputDirs[myChain],"/sigmainvValues.txt"))
 				tmp <- array(as.numeric(rep(tmp, Kmax)), dim = c(1, p*Kmax) )
@@ -3766,14 +3795,14 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_CUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}
@@ -3875,7 +3904,7 @@ fabMix_CxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 # new in version 3
 # UUC and UCC models (sameSigma = TRUE => UCC, sameSigma = FALSE => UUC)
-fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05){
+fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up_overfitting = 100, warm_up = 500, overfittingInitialization=TRUE, progressGraphs = FALSE, gwar = 0.05, lowerTriangular=TRUE){
 
 	missingRowsIndex <- which(is.na(rowSums(rawData)) == TRUE)
 	nMissingRows <- length( missingRowsIndex ) 
@@ -3941,9 +3970,11 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 	kValues <- array(data = NA, dim = c(mCycles, nChains))
 	mh_acceptance_rate <- 0
 	dir.create('tmpDir')
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	kpq <- Kmax*p*q
@@ -3959,13 +3990,13 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = warm_up_overfitting, thinning = 1, burn = warm_up_overfitting - 1, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}
 	}else{
@@ -3976,13 +4007,13 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = 10, thinning = 1, burn = 9, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 			}
 		}
 	}
@@ -3992,13 +4023,13 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 		}
 	}else{
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 		}
 	}
 	cat(paste(' OK'),'\n')
@@ -4041,14 +4072,14 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UCC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_UUC(q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}
@@ -4151,7 +4182,7 @@ fabMix_UxC <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, 
 
 
 
-fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up = 500, progressGraphs = FALSE, gwar = 0.05){
+fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, outDir, Kmax, mCycles, burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize, thinning, zStart, nIterPerCycle, gibbs_z = 1, warm_up = 500, progressGraphs = FALSE, gwar = 0.05, lowerTriangular=TRUE){
 	cat("         ____      __    __  ____     ", "\n")
 	cat("        / __/___ _/ /_  /  |/  (_)  __", "\n")
 	cat("       / /_/ __ `/ __ \\/ /|_/ / / |/_/", "\n")
@@ -4216,9 +4247,11 @@ fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, out
 	kValues <- array(data = NA, dim = c(mCycles, nChains))
 	mh_acceptance_rate <- 0
 	dir.create('tmpDir')
-	v_r <- numeric(p) #indicates the non-zero values of Lambdas
-	for( r in 1:p ){
-		v_r[r] <- min(r,q)
+	v_r <- rep(q, p) #indicates the non-zero values of Lambdas
+	if(lowerTriangular){
+		for( r in 1:p ){
+			v_r[r] <- min(r,q)
+		}
 	}
 
 	kpq <- Kmax*p*q
@@ -4231,13 +4264,13 @@ fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, out
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = 100, thinning = 1, burn = 99, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 		}
 	}else{
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_Sj_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = 100, thinning = 1, burn = 99, alpha_prior= rep(initialAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = FALSE, gibbs_z = gwar, lowerTriangular=lowerTriangular)
 		}
 	}
 	cat(paste(' OK'),'\n')
@@ -4246,13 +4279,13 @@ fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, out
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 		}
 	}else{
 		foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 			overfittingMFA_Sj_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 				Kmax = Kmax, m = warm_up, thinning = 1, burn = warm_up - 1, alpha_prior= rep(dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z)
+				alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, start_values = TRUE, gibbs_z = gibbs_z, lowerTriangular=lowerTriangular)
 		}
 	}
 	cat(paste(' OK'),'\n')
@@ -4293,14 +4326,14 @@ fabMix_missing_values <- function(sameSigma = TRUE, dirPriorAlphas, rawData, out
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}else{
 			foreach(myChain=1:nChains, .export=ls(envir=globalenv()) ) %dopar% {
 				overfittingMFA_Sj_missing_values(missing_entries = missing_entries, q = q, originalX = originalX, x_data = x_data, outputDirectory = outputDirs[myChain], 
 					Kmax = Kmax, m = nIterPerCycle, thinning = 1, burn = bb, alpha_prior= rep( dirPriorAlphas[myChain], Kmax), g = g, h = h, 
-					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE)
+					alpha_sigma = alpha_sigma, beta_sigma = beta_sigma,  start_values = TRUE, lowerTriangular=lowerTriangular)
 				kValues[iteration, myChain] <- read.table( paste0(outputDirs[myChain],'/k.and.logl.Values.txt') )[1,1]
 			}
 		}
@@ -5384,14 +5417,14 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 			burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize = TRUE, 
 			thinning = 1, zStart, nIterPerCycle, gibbs_z = 1, 
 			warm_up_overfitting = 500, warm_up = 5000,  overfittingInitialization=TRUE, 
-			progressGraphs = FALSE, gwar = 0.05, rmDir = TRUE, parallelModels = NULL			
+			progressGraphs = FALSE, gwar = 0.05, rmDir = TRUE, parallelModels = NULL, lowerTriangular=TRUE			
 			){
 
 	cat("         ____      __    __  ____     ", "\n")
 	cat("        / __/___ _/ /_  /  |/  (_)  __", "\n")
 	cat("       / /_/ __ `/ __ \\/ /|_/ / / |/_/", "\n")
 	cat("      / __/ /_/ / /_/ / /  / / />  <  ", "\n")
-	cat("     /_/  \\__,_/_.___/_/  /_/_/_/|_|  version 4.6", "\n\n")
+	cat("     /_/  \\__,_/_.___/_/  /_/_/_/|_|  version 5.0", "\n\n")
 
 	model = intersect(model, c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "CCC"))
 	if(missing(Kmax)){Kmax <- 20}
@@ -5435,7 +5468,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 	p <- dim(rawData)[2]
 	n <- dim(rawData)[1]
 	cat(paste0("-    Data consists of p = ", p, " variables and n = ",n," observations","\n"))
-	cat(paste0("-    MCMC parameters: g = ", g, ", h = ", h, ", alpha_sigma = ", alpha_sigma, ", beta_sigma = ", beta_sigma,"\n"))
+	cat(paste0("-    Prior parameters: g = ", g, ", h = ", h, ", alpha_sigma = ", alpha_sigma, ", beta_sigma = ", beta_sigma,"\n"))
 	cat(paste0('-         using Nchains = ', nChains),'\n')
 	cat(paste0('-         target posterior distribution corresponds to alpha = ', dirPriorAlphas[1]),'\n')
 	if( normalize == TRUE ){
@@ -5463,7 +5496,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 			burnCycles = burnCycles, g = g, h = h, alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, q = q, normalize = normalize, 
 			thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, gibbs_z = gibbs_z, 
 			warm_up_overfitting = warm_up_overfitting, warm_up = warm_up,  overfittingInitialization=overfittingInitialization, 
-			progressGraphs = FALSE, gwar = 0.05, rmDir = rmDir, parallelModels = parallelModels)
+			progressGraphs = FALSE, gwar = 0.05, rmDir = rmDir, parallelModels = parallelModels, lowerTriangular=lowerTriangular)
 			return(fpr)	#exit
 	}
 
@@ -5496,7 +5529,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = FALSE, sameLambda = FALSE, isotropic = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5520,7 +5553,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = TRUE, sameLambda = FALSE, isotropic = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5544,7 +5577,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = FALSE, sameLambda = TRUE, isotropic = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5568,7 +5601,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = TRUE, sameLambda = TRUE, isotropic = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5592,7 +5625,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = FALSE, sameLambda = TRUE, isotropic = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5616,7 +5649,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = TRUE, sameLambda = TRUE, isotropic = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5640,7 +5673,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = FALSE, sameLambda = FALSE, isotropic = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = FALSE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5664,7 +5697,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 				beta_sigma = beta_sigma, q = nFactors, normalize = normalize, 
 				thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, 
 				gibbs_z = gibbs_z, warm_up_overfitting = warm_up_overfitting, warm_up = warm_up, 
-				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar)
+				overfittingInitialization=overfittingInitialization, progressGraphs = progressGraphs, gwar = gwar, lowerTriangular=lowerTriangular)
 			if(progressGraphs==TRUE){dev.off()}
 			getStuffForDIC(sameSigma = TRUE, sameLambda = FALSE, isotropic = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, Km = Kmax)
 #			dealWithLabelSwitching(sameSigma = TRUE, x_data = rawData, outputFolder = myDir, q = nFactors, compute_regularized_expression = FALSE, Km = Kmax)
@@ -5831,7 +5864,7 @@ fabMix <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "C
 	}
 
 
-	cat(paste0("\n","Given the specified range of models, factors, maximum number of clusters and MCMC parameters,","\n", "the best model corresponds to the ", model_selected, " parameterization with q = ", q_selected, " factors and K = ",nClusters[q_selected, model_selected]," clusters. ","\n","The BIC for this model equals ", round(min(bic),3), "."),"\n")
+	cat(paste0("\n","Given the specified range of models, factors, maximum number of clusters and Prior parameters,","\n", "the best model corresponds to the ", model_selected, " parameterization with q = ", q_selected, " factors and K = ",nClusters[q_selected, model_selected]," clusters. ","\n","The BIC for this model equals ", round(min(bic),3), "."),"\n")
 	best_model <- data.frame(parameterization = model_selected, num_Clusters = nClusters[q_selected, model_selected], num_Factors = as.numeric(q_selected))
 
 	results <- vector("list", length = 13)
@@ -5882,7 +5915,7 @@ fabMix_parallelModels <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "
 			burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize =TRUE, 
 			thinning=1, zStart, nIterPerCycle, gibbs_z = 1, 
 			warm_up_overfitting, warm_up,  overfittingInitialization = TRUE, 
-			progressGraphs = FALSE, gwar = 0.05, rmDir = TRUE, parallelModels){
+			progressGraphs = FALSE, gwar = 0.05, rmDir = TRUE, parallelModels, lowerTriangular=TRUE){
 
 #	copy default values
 	model = intersect(model, c("UUU", "CUU", "UCU", "CCU", "UCC", "UUC", "CUC", "CCC"))
@@ -5944,7 +5977,7 @@ fabMix_parallelModels <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "
 			burnCycles = burnCycles, g = g, h = h, alpha_sigma = alpha_sigma, beta_sigma = beta_sigma, q = q, normalize = normalize, 
 			thinning = thinning, zStart = zStart, nIterPerCycle = nIterPerCycle, gibbs_z = gibbs_z, 
 			warm_up_overfitting = warm_up_overfitting, warm_up = warm_up,  overfittingInitialization=overfittingInitialization, 
-			progressGraphs = FALSE, gwar = gwar, rmDir = rmDir)
+			progressGraphs = FALSE, gwar = gwar, rmDir = rmDir, lowerTriangular=lowerTriangular)
 		return(fam)
 		sink()		
 	}
@@ -5987,7 +6020,7 @@ fabMix_parallelModels <- function(model = c("UUU", "CUU", "UCU", "CCU", "UCC", "
 	mergedResult$mcmc <- myList[[model_pointer]][['mcmc']]
 	mergedResult$regularizedExpression <- myList[[model_pointer]][['regularizedExpression']]
 
-	cat(paste0("\n","Given the specified range of models, factors, maximum number of clusters and MCMC parameters,","\n", "the best model corresponds to the ", model_selected, " parameterization with q = ", q_selected, " factors and K = ",mergedResult$selected_model$num_Clusters," clusters. ","\n","The BIC for this model equals ", round(min(mergedResult$bic[as.character(q_selected),model_selected]),3), "."),"\n")
+	cat(paste0("\n","Given the specified range of models, factors, maximum number of clusters and Prior parameters,","\n", "the best model corresponds to the ", model_selected, " parameterization with q = ", q_selected, " factors and K = ",mergedResult$selected_model$num_Clusters," clusters. ","\n","The BIC for this model equals ", round(min(mergedResult$bic[as.character(q_selected),model_selected]),3), "."),"\n")
 
 	if(rmDir == TRUE){
 		unlink(outDir, recursive=TRUE)

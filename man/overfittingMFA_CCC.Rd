@@ -9,7 +9,7 @@
 \usage{
 overfittingMFA_CCC(x_data, originalX, outputDirectory, Kmax, m, thinning, burn, 
 	g, h, alpha_prior, alpha_sigma, beta_sigma, 
-	start_values, q, zStart, gibbs_z)
+	start_values, q, zStart, gibbs_z, lowerTriangular)
 }
 \arguments{
   \item{x_data}{
@@ -59,6 +59,9 @@ overfittingMFA_CCC(x_data, originalX, outputDirectory, Kmax, m, thinning, burn,
 }
   \item{gibbs_z}{
 	Optional
+}
+  \item{lowerTriangular}{
+	logical value indicating whether a lower triangular parameterization should be imposed on the matrix of factor loadings (if TRUE) or not. Default: TRUE.
 }
 }
 \value{

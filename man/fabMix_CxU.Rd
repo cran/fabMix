@@ -11,7 +11,7 @@ fabMix_CxU(sameSigma, dirPriorAlphas, rawData, outDir, Kmax, mCycles,
 	burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize,  
 	thinning, zStart, nIterPerCycle, gibbs_z, 
 	warm_up_overfitting, warm_up, overfittingInitialization, 
-	progressGraphs, gwar)
+	progressGraphs, gwar, lowerTriangular)
 }
 \arguments{
   \item{sameSigma}{
@@ -79,6 +79,9 @@ Number of cycles that will be discarded as burn-in period.
 }
   \item{gwar}{
 	Initialization parameter. Default: 0.05.
+}
+  \item{lowerTriangular}{
+	logical value indicating whether a lower triangular parameterization should be imposed on the matrix of factor loadings (if TRUE) or not. Default: TRUE.
 }
 }
 \value{

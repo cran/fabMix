@@ -11,7 +11,7 @@ fabMix(model, nChains, dirPriorAlphas, rawData, outDir, Kmax, mCycles,
 	burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize,  
 	thinning, zStart, nIterPerCycle, gibbs_z, 
 	warm_up_overfitting, warm_up, overfittingInitialization, 
-	progressGraphs, gwar, rmDir, parallelModels)
+	progressGraphs, gwar, rmDir, parallelModels, lowerTriangular)
 }
 \arguments{
   \item{model}{
@@ -88,6 +88,9 @@ Number of cycles that will be discarded as burn-in period.
 }
   \item{parallelModels}{
 	Model-level parallelization: An optional integer specifying the number of cores that will be used in order to fit in parallel each member of \code{model}. Default: NULL (no model-level parallelization).
+}
+  \item{lowerTriangular}{
+	logical value indicating whether a lower triangular parameterization should be imposed on the matrix of factor loadings (if TRUE) or not. Default: TRUE.
 }
 }
 \value{

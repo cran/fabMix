@@ -11,7 +11,7 @@ fabMix_CxC(sameSigma, dirPriorAlphas, rawData, outDir, Kmax, mCycles,
 	burnCycles, g, h, alpha_sigma, beta_sigma, q, normalize,  
 	thinning, zStart, nIterPerCycle, gibbs_z, 
 	warm_up_overfitting, warm_up, overfittingInitialization, 
-	progressGraphs, gwar, cccStart)
+	progressGraphs, gwar, cccStart, lowerTriangular)
 }
 \arguments{
   \item{sameSigma}{
@@ -82,6 +82,9 @@ Number of cycles that will be discarded as burn-in period.
 }
   \item{cccStart}{
 	Initialization from the CCC model.
+}
+  \item{lowerTriangular}{
+	logical value indicating whether a lower triangular parameterization should be imposed on the matrix of factor loadings (if TRUE) or not. Default: TRUE.
 }
 }
 \value{
