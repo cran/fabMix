@@ -1,14 +1,14 @@
-b32ca65865212eb0b6cc8c55a1931944 *DESCRIPTION
+00df88647203a39c9be11f968fdb6400 *DESCRIPTION
 070f1fe007432583380e8a9bb9ac537f *NAMESPACE
 6cefaad2fc468e8c978c4f8c217987f3 *R/RcppExports.R
 f7e9e0dc3ae7864c0707d56310cbca2f *R/fabMix.R
-86523ed9cb5d1ea5193ed23926cb9178 *build/partial.rdb
+097da0790037642a5568dc7f0a18a104 *build/partial.rdb
 b5c9e190ebc7e37eb8fdf4d81ba389de *data/waveDataset1500.RData
-b0c84162217ce5d07b0b70443e606267 *inst/CITATION
+3af6949dbaf063af2cf7a8647b6c1fe2 *inst/CITATION
 6ee08ebe1cced234c0ca51d5b378326c *man/CorMat_mcmc_summary.Rd
 85e8d57ddf21814d9126ee51bcf83acc *man/CovMat_mcmc_summary.Rd
 370d426981a3905d3a5896e25753ea41 *man/complete.log.likelihood.Rd
-526c38776d3c286509eb75245543f5eb *man/complete.log.likelihood_Sj.Rd
+9ca4879cc17e41fab6f1cd991c2a81d0 *man/complete.log.likelihood_Sj.Rd
 04521971779dfee9becc1586c4d1529b *man/complete.log.likelihood_q0.Rd
 3ef15ef1fb4a69c03dccda64f26db7d3 *man/complete.log.likelihood_q0_sameSigma.Rd
 2ac594351653e50c0479b2d8789d41d4 *man/compute_A_B_G_D_and_simulate_mu_Lambda.Rd
@@ -29,7 +29,7 @@ a82944a5bd04c0eb33aac44c7824f538 *man/fabMix_CxC.Rd
 fd0f20c4aaa10cfd56fb377e8d99266c *man/fabMix_UxU.Rd
 b4174d85d032dcb40a849784aa18f5e0 *man/fabMix_missing_values.Rd
 be2dd4aaf039c425747534481f2d71c0 *man/fabMix_parallelModels.Rd
-e766a4aa8877226c062b98df49310d63 *man/getStuffForDIC.Rd
+3b546b58a77db62282a0757e1c57f7eb *man/getStuffForDIC.Rd
 52362a81efb18c37eef3d4f9c84b287b *man/log_dirichlet_pdf.Rd
 b5c2db2832cb545134af4d82f7e48394 *man/myDirichlet.Rd
 cef2ba02da03d33d79cc44d1adde3dfd *man/observed.log.likelihood0.Rd
@@ -73,7 +73,7 @@ da1f10afb28a8e8416926a5c0bc18773 *man/update_z2.Rd
 c478cb9b08a78a1bfcce72bb175eb3ba *man/update_z_q0.Rd
 657c9267e3c40e895148422949532cad *man/update_z_q0_sameSigma.Rd
 9dc4d20b562b524afb32d646eab584c3 *man/waveDataset1500.Rd
-61059660eb073d93e00e8ee054237071 *src/Makevars
-61059660eb073d93e00e8ee054237071 *src/Makevars.win
+d41fbd558d4ecf3c69bc2a4078fd47a0 *src/Makevars
+6bcee6df7622505b45514c7fcc990ff2 *src/Makevars.win
 beab39ef57521e49c6d2c0a109caf226 *src/RcppExports.cpp
 909bd9e3c80ceec9ab04f1a94da9d5bd *src/fabMix.cpp

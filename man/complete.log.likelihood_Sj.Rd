@@ -30,7 +30,7 @@ complete.log.likelihood_Sj(x_data, w, mu, Lambda, SigmaINV, z)
 
 }
   \item{z}{
-
+	The allocation vector.
 }
 }
 \value{

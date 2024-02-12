@@ -42,11 +42,8 @@ getStuffForDIC(sameSigma, sameLambda, isotropic, x_data, outputFolder, q, burn,
 	Discard draws with log-likelihood values lower than the specific quantile. This applied only for the DIC computation. 
 }
 }
-\details{
-If necessary, more details than the description above
-}
 \value{
-	The information criteria are saved to the \code{informationCriteria_map_model.txt} file in the code{outputFolder}. 
+	The information criteria are saved to the \code{informationCriteria_map_model.txt} file in the \code{outputFolder}. 
 }
 \author{
 Panagiotis Papastamoulis
